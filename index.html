@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404: Plans Not Found — a climate program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1020; --panel:#151a30; --panel2:#1c2240; --line:#2a3158;
+    --ink:#eef0fa; --muted:#a3a9c9; --dim:#6d74a0;
+    --cool:#4aa3ff; --warm:#ff8a3d; --hot:#ff3d5a; --ok:#3ddc97; --warn:#ffd166;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+    --sans:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.55}
+  a{color:var(--warm)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  .mono{font-family:var(--mono)}
+  nav{position:sticky;top:0;z-index:20;background:rgba(13,16,32,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:18px;height:54px;overflow-x:auto}
+  nav .brand{font-family:var(--mono);font-weight:800;color:var(--warm);white-space:nowrap}
+  nav a.l{font-family:var(--mono);font-size:14px;color:var(--muted);text-decoration:none;white-space:nowrap}
+  nav a.l:hover{color:var(--ink)}
+  section{padding:84px 0;border-bottom:1px solid var(--line)}
+  .tag{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--warm)}
+  h1,h2,h3{font-family:var(--sans);line-height:1.08;margin:.2em 0 .4em}
+  h2{font-size:clamp(32px,5vw,50px);font-weight:800}
+  h3{font-size:22px;font-weight:600}
+  p.lead{font-size:21px;color:var(--muted);max-width:720px}
+  .btn{font-family:var(--mono);font-weight:600;font-size:15px;border:0;border-radius:10px;padding:13px 20px;cursor:pointer;background:var(--warm);color:#1a0d05;transition:transform .15s, filter .15s}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+
+  /* HERO */
+  #hero{padding:0;border:0;position:relative;overflow:hidden}
+  #stripes{display:flex;height:100%;position:absolute;inset:0;opacity:.95}
+  #stripes div{flex:1}
+  .hero-inner{position:relative;min-height:88vh;display:flex;flex-direction:column;justify-content:center;padding:80px 0;background:linear-gradient(180deg,rgba(13,16,32,.35),rgba(13,16,32,.78) 70%,var(--bg))}
+  .err{font-family:var(--mono);font-size:15px;background:rgba(0,0,0,.55);display:inline-block;padding:6px 12px;border-radius:8px;color:var(--warn);border:1px solid rgba(255,209,102,.35)}
+  .hero-inner h1{font-size:clamp(52px,10vw,124px);font-weight:800;letter-spacing:-.03em;margin:18px 0 10px;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+  .glitch{position:relative;display:inline-block}
+  .glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0;opacity:.7}
+  .glitch::before{color:var(--cool);transform:translate(-3px,0);clip-path:inset(0 0 55% 0);animation:g1 3.2s infinite steps(1)}
+  .glitch::after{color:var(--hot);transform:translate(3px,0);clip-path:inset(55% 0 0 0);animation:g2 2.7s infinite steps(1)}
+  @keyframes g1{0%,92%{transform:translate(0)}93%{transform:translate(-6px,1px)}96%{transform:translate(4px,-1px)}}
+  @keyframes g2{0%,90%{transform:translate(0)}91%{transform:translate(6px,0)}95%{transform:translate(-4px,1px)}}
+  .hero-inner .sub{font-size:clamp(20px,2.6vw,26px);max-width:760px;color:#dfe3f7}
+  .stripe-cap{font-family:var(--mono);font-size:13px;color:#cfd3ea;margin-top:26px;opacity:.85}
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+
+  /* DATA */
+  .grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:22px}
+  @media (max-width:860px){.grid2{grid-template-columns:1fr}}
+  #chart{width:100%;height:auto;display:block;touch-action:none;cursor:crosshair}
+  .readout{font-family:var(--mono);font-size:14px;color:var(--muted);min-height:22px;margin-top:8px}
+  .big{font-family:var(--mono);font-weight:800;font-size:56px;line-height:1;color:var(--hot)}
+  .stat-label{color:var(--muted);font-size:16px}
+  input[type=range]{width:100%;accent-color:var(--warm)}
+  .born{font-family:var(--mono);font-size:30px;font-weight:800}
+  .callout{border-left:4px solid var(--warm);padding:10px 16px;background:var(--panel2);border-radius:0 10px 10px 0;margin-top:22px;font-size:17px}
+
+  /* GAME */
+  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:18px 0}
+  .plan{background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;text-align:left;color:var(--ink);font-family:var(--sans);font-size:16px;transition:border-color .15s, transform .15s}
+  .plan:hover{transform:translateY(-2px)}
+  .plan[aria-pressed=true]{border-color:var(--warm);background:#22203a}
+  .plan .em{font-size:30px;display:block;margin-bottom:6px}
+  .plan small{display:block;color:var(--dim);font-family:var(--mono);font-size:12px;margin-top:4px}
+  .years{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 18px}
+  .yr{font-family:var(--mono);background:var(--panel);border:2px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 16px;cursor:pointer;font-size:15px}
+  .yr[aria-pressed=true]{border-color:var(--warm);color:var(--warm)}
+  .yr small{display:block;color:var(--dim);font-size:11px}
+  .term{background:#05060d;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:18px}
+  .term .bar{display:flex;gap:7px;padding:10px 14px;background:#11142a;align-items:center}
+  .term .bar i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .term .bar span{font-family:var(--mono);font-size:12px;color:var(--dim);margin-left:8px}
+  #out{font-family:var(--mono);font-size:14px;padding:16px 18px;min-height:220px;max-height:440px;overflow:auto;white-space:pre-wrap;line-height:1.6}
+  .c-ok{color:var(--ok)} .c-err{color:var(--hot)} .c-warn{color:var(--warn)} .c-dim{color:var(--dim)} .c-cool{color:var(--cool)}
+  .score{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+  .score .card{flex:1;min-width:150px;padding:14px 16px}
+  .score b{font-family:var(--mono);font-size:30px;display:block}
+
+  /* THEN VS NOW */
+  .cells{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:520px}
+  .cells div{aspect-ratio:1;border-radius:3px;background:#2b3360;transition:background .5s}
+  .cells div.hot{background:var(--hot)}
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0}
+  .toggle button{font-family:var(--mono);background:transparent;color:var(--muted);border:0;padding:10px 16px;cursor:pointer;font-size:14px}
+  .toggle button[aria-pressed=true]{background:var(--warm);color:#1a0d05;font-weight:600}
+  .impacts{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:30px}
+  .impacts .card h3{font-size:19px;margin-top:6px}
+  .impacts .card p{margin:0;color:var(--muted);font-size:16px}
+  .diff{font-family:var(--mono);font-size:14px;white-space:pre-wrap;line-height:1.7}
+  .diff .m{color:#ff8e9e} .diff .p{color:#7ff0bd}
+
+  /* PATCH NOTES */
+  .acts{display:grid;gap:10px;margin-top:18px}
+  .act{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer}
+  .act input{width:22px;height:22px;accent-color:var(--ok);margin-top:3px;flex:none}
+  .act b{display:block}
+  .act span{color:var(--muted);font-size:16px}
+  .act .lvl{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  #gitlog{font-family:var(--mono);font-size:13px;white-space:pre-wrap;min-height:120px}
+  .commit-hash{color:var(--warn)}
+
+  /* QUIZ */
+  .q{margin-bottom:22px}
+  .q .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .q button{font-family:var(--sans);font-size:16px;background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+  .q button.right{border-color:var(--ok);background:#143329}
+  .q button.wrong{border-color:var(--hot);background:#3a1622}
+  .q .fb{font-size:15px;color:var(--muted);margin-top:8px;min-height:22px}
+
+  /* README */
+  .readme{font-family:var(--mono);font-size:15px;line-height:1.7}
+  .readme h3{font-family:var(--mono);font-size:17px;color:var(--warm);margin-top:26px}
+  .readme code{background:var(--panel2);padding:2px 6px;border-radius:5px}
+  footer{padding:50px 0 80px;color:var(--dim);font-size:15px}
+  footer li{margin-bottom:6px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav aria-label="Sections">
+  <div class="wrap">
+    <span class="brand">plans.exe</span>
+    <a class="l" href="#data">/data</a>
+    <a class="l" href="#game">/run</a>
+    <a class="l" href="#diff">/diff</a>
+    <a class="l" href="#patch">/patch</a>
+    <a class="l" href="#quiz">/test</a>
+    <a class="l" href="#readme">README.md</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header id="hero">
+  <div id="stripes" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="wrap">
+      <span class="err">Uncaught HeatException at saturday.js:1</span>
+      <h1><span class="glitch" data-t="404:">404:</span><br>Plans Not Found</h1>
+      <p class="sub">Rising temperatures are ruining our plans — the game, the concert, the beach day, the outfit you picked last night. I'm a programmer, so I wrote a program about it.</p>
+      <div class="hero-ctas">
+        <a href="#game"><button class="btn">▶ Run plans.exe</button></a>
+        <a href="#data"><button class="btn ghost">View the data</button></a>
+      </div>
+      <p class="stripe-cap">↑ Each stripe behind this text is one year of NASA global temperature data, 1880 → 2025. Blue = cooler than average, red = hotter.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ DATA ============ -->
+<section id="data">
+  <div class="wrap">
+    <span class="tag">// 01 · system log</span>
+    <h2>The planet's temperature log, in your lifetime.</h2>
+    <p class="lead">NASA has tracked Earth's average surface temperature since 1880. Drag the slider to the year you were born and see how much of this story is <em>yours</em>.</p>
+
+    <div class="grid2" style="margin-top:28px">
+      <div class="card">
+        <svg id="chart" viewBox="0 0 640 340" role="img" aria-label="Line chart of NASA global temperature anomaly from 1880 to 2025, rising from about minus 0.2 degrees Celsius to about plus 1.2 degrees Celsius."></svg>
+        <div class="readout" id="readout" aria-live="polite">Hover or tap the chart to inspect a year.</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">I was born in</div>
+        <div class="born" id="bornYear">2009</div>
+        <input type="range" id="born" min="1985" max="2015" value="2009" aria-label="Your birth year">
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+        <div class="big" id="bornHot">0</div>
+        <div class="stat-label">of the 10 hottest years on record have happened since you were born.</div>
+        <div style="height:16px"></div>
+        <div class="big" id="bornDelta" style="color:var(--warm);font-size:42px">+0.0°C</div>
+        <div class="stat-label">warmer: Earth's average in 2025 vs. the year you were born.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>Why this matters:</b> According to NASA, Earth's current warming is happening at a rate not seen in the past <b>10,000 years</b> — and human greenhouse gas emissions are the main cause. In NASA's record, 2025 came in at <b class="mono">+1.19°C</b> above the 1951–1980 average, and the 10 most recent years are the 10 warmest ever measured.
+    </div>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="game">
+  <div class="wrap">
+    <span class="tag">// 02 · run plans.exe</span>
+    <h2>Plan your weekend. Then watch the climate crash it.</h2>
+    <p class="lead">Pick three plans and a summer to run them in. The program rolls the weather. Same plans, same you — only the climate changes.</p>
+
+    <h3 style="margin-top:28px">1 · Choose 3 plans <span class="mono c-dim" id="pickCount" style="font-size:15px">(0/3)</span></h3>
+    <div class="plans" id="plans"></div>
+
+    <h3>2 · Choose a summer</h3>
+    <div class="years" id="years"></div>
+
+    <button class="btn" id="run" disabled>▶ npm run weekend</button>
+    <button class="btn ghost" id="again" style="display:none">↻ Run again</button>
+
+    <div class="term" aria-label="Program output">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>~/my-weekend — zsh</span></div>
+      <div id="out" aria-live="polite"><span class="c-dim">$ waiting for input… pick 3 plans and a year.</span></div>
+    </div>
+    <div class="score" id="score" style="display:none">
+      <div class="card"><span class="stat-label">plans survived</span><b id="sSurv" class="c-ok">0/3</b></div>
+      <div class="card"><span class="stat-label">plans crashed</span><b id="sCrash" class="c-err">0</b></div>
+      <div class="card"><span class="stat-label">outfit changes</span><b id="sFit" class="c-warn">0</b></div>
+    </div>
+    <p class="c-dim" style="font-size:14px;margin-top:14px">⚙️ How the odds work: this is a game, not a forecast. Each plan's crash chance grows with the year, modeled on NASA research showing that "extremely hot" summers went from covering under 1% of land (1951–1980) to about 10% in recent decades. 2055 assumes that trend keeps going if emissions don't come down.</p>
+  </div>
+</section>
+
+<!-- ============ DIFF ============ -->
+<section id="diff">
+  <div class="wrap">
+    <span class="tag">// 03 · git diff summer</span>
+    <h2>Summer, then vs. now.</h2>
+    <p class="lead">Imagine Earth's land split into 100 squares. Red squares are having an <b>"extremely hot"</b> summer — the kind that almost never happened when your parents' parents were kids.</p>
+
+    <div class="grid2" style="margin-top:20px;align-items:center">
+      <div>
+        <div class="toggle" role="group" aria-label="Choose era">
+          <button aria-pressed="true" data-era="then">1951–1980</button>
+          <button aria-pressed="false" data-era="now">Recent decade</button>
+        </div>
+        <div class="cells" id="cells" aria-hidden="true"></div>
+      </div>
+      <div class="card">
+        <div class="big" id="cellNum">&lt;1</div>
+        <div class="stat-label" id="cellTxt">square out of 100 had an extremely hot summer in a typical year (1951–1980).</div>
+        <p style="font-size:16px;color:var(--muted);margin-bottom:0">Source: NASA GISS analysis (Hansen et al., 2012). "Extremely hot" means a summer hotter than anything but the rarest outliers of 1951–1980. Since then, it has become about 10× more common.</p>
+      </div>
+    </div>
+
+    <div class="card diff" style="margin-top:30px">
+<span class="c-dim">--- a/summer_1995.txt</span>
+<span class="c-dim">+++ b/summer_2025.txt</span>
+<span class="m">- soccer practice at 3pm</span>
+<span class="p">+ soccer practice moved to 7pm — heat advisory</span>
+<span class="m">- packed one outfit</span>
+<span class="p">+ packed a hoodie, shorts, and a rain jacket. used all three.</span>
+<span class="m">- walked to the pool</span>
+<span class="p">+ pool closed early — lightning, then air-quality alert</span>
+<span class="m">- school AC was "nice to have"</span>
+<span class="p">+ early dismissal: classrooms too hot</span>
+    </div>
+
+    <div class="impacts">
+      <div class="card"><span style="font-size:28px">⚽</span><h3>Sports</h3><p>Heat rules shorten practices, cancel games, and push them to night. Athletes are some of the first people hit by heat illness.</p></div>
+      <div class="card"><span style="font-size:28px">👷</span><h3>Summer jobs</h3><p>Lifeguarding, camp counseling, landscaping, food trucks — outdoor jobs get more dangerous on extreme-heat days.</p></div>
+      <div class="card"><span style="font-size:28px">🏫</span><h3>School</h3><p>Many older schools weren't built for this heat. Hot classrooms make it harder to focus and can mean early dismissals.</p></div>
+      <div class="card"><span style="font-size:28px">💡</span><h3>Your family's bills</h3><p>Hotter summers mean more air conditioning — and higher electricity bills.</p></div>
+      <div class="card"><span style="font-size:28px">🍓</span><h3>Groceries</h3><p>Heat and drought stress farms. When crops struggle, produce prices go up.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PATCH NOTES ============ -->
+<section id="patch">
+  <div class="wrap">
+    <span class="tag">// 04 · patch notes v2.0</span>
+    <h2>Recycling is the bug fix. Civic action is the update.</h2>
+    <p class="lead">You probably already recycle, save water, and thrift. Keep doing it. But the biggest changes — cleaner energy, cooler schools, more trees, better transit — get decided by schools, cities, and governments. Here's how to push the update. Check what you'll commit to.</p>
+
+    <div class="grid2" style="margin-top:20px">
+      <div class="acts" id="acts"></div>
+      <div>
+        <div class="term" style="margin-top:0;position:sticky;top:74px">
+          <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>git log --oneline</span></div>
+          <div id="gitlog" style="padding:16px 18px"><span class="c-dim">nothing committed yet. check an action →</span></div>
+          <div style="padding:0 18px 18px">
+            <button class="btn" id="copyShare" disabled>Copy my patch notes</button>
+            <div class="c-dim mono" id="copyMsg" style="font-size:13px;margin-top:8px" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="quiz">
+  <div class="wrap">
+    <span class="tag">// 05 · run tests</span>
+    <h2>Quick test suite.</h2>
+    <p class="lead">Three questions. Let's see if your code passes.</p>
+    <div id="quizBox" style="margin-top:20px"></div>
+    <div class="mono" id="quizScore" style="font-size:18px"></div>
+  </div>
+</section>
+
+<!-- ============ README ============ -->
+<section id="readme">
+  <div class="wrap">
+    <span class="tag">// 06 · README.md</span>
+    <h2>Why I built this.</h2>
+    <div class="card readme">
+      <h3># My climate "why": rising temperatures ruin my plans</h3>
+      <p>Climate change can feel like something happening to polar bears or people far away. For me it shows up in small, annoying, real ways: a game moved because of a heat advisory, an event canceled for storms, changing outfits three times because the weather won't make up its mind. When it's pouring or blazing outside, I don't even want to leave my bed — and I know my friends feel the same. Those small moments add up to a big idea: <b>the climate is changing the plans of my generation</b>, and our futures are the biggest plan of all.</p>
+
+      <h3># My superpower: programming</h3>
+      <p>Programmers turn messy data into something people can <i>use</i> and <i>feel</i>. So instead of writing an essay, I wrote a program:</p>
+      <ul>
+        <li><code>/data</code> takes NASA's real temperature record and personalizes it — you drag to your birth year, and the code counts how many record-hot years you've lived through.</li>
+        <li><code>/run</code> is a simulation: the same weekend plans run in different climates, with the crash odds tied to NASA's research on extreme summers. I used a game because my peers learn by doing, not by being lectured.</li>
+        <li><code>/patch</code> turns civic actions into "commits," because changing a system takes deliberate, repeated updates — just like code.</li>
+      </ul>
+
+      <h3># Who it's for</h3>
+      <p>My friends and peers. They already know the planet is warming and already do the personal stuff. What I want them to see is that <b>civic engagement</b> — speaking up at school, contacting leaders, registering to vote — is the update that scales. The site uses the language we already speak online (errors, crashes, patch notes) and is made to be shared on TikTok.</p>
+
+      <h3># The data</h3>
+      <p>NASA reports that Earth is warming at a rate not seen in the past 10,000 years, driven by human greenhouse gas emissions. Every stripe, line, and red square on this page comes from NASA data.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="mono">Made by <span id="author">Henoc Dossou</span> · built with HTML, CSS & JavaScript</p>
+    <b>Sources</b>
+    <ul>
+      <li>NASA GISS Surface Temperature Analysis (GISTEMP v4), annual global anomalies vs. 1951–1980 — <a href="https://data.giss.nasa.gov/gistemp/">data.giss.nasa.gov/gistemp</a> (values rounded to 0.01°C)</li>
+      <li>NASA Earth Indicators: Global Temperature (2025 = +1.19°C) — <a href="https://science.nasa.gov/earth/explore/earth-indicators/global-temperature/">science.nasa.gov</a></li>
+      <li>NASA: Evidence of climate change ("rate not seen in the past 10,000 years") — <a href="https://climate.nasa.gov/evidence/">climate.nasa.gov/evidence</a></li>
+      <li>NASA GISS (2012), "Research Links Extreme Summer Heat Events to Global Warming" (Hansen, Sato & Ruedy, PNAS) — <a href="https://www.giss.nasa.gov/research/news/20120806/">giss.nasa.gov</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+// ===== NASA GISTEMP v4 annual global anomalies (°C vs 1951–1980), rounded =====
+const TEMPS = {
+1880:-.17,1881:-.09,1882:-.11,1883:-.17,1884:-.28,1885:-.33,1886:-.31,1887:-.36,1888:-.18,1889:-.11,
+1890:-.35,1891:-.22,1892:-.27,1893:-.31,1894:-.30,1895:-.23,1896:-.11,1897:-.11,1898:-.27,1899:-.17,
+1900:-.08,1901:-.15,1902:-.28,1903:-.37,1904:-.47,1905:-.26,1906:-.22,1907:-.39,1908:-.43,1909:-.48,
+1910:-.43,1911:-.44,1912:-.36,1913:-.35,1914:-.15,1915:-.14,1916:-.36,1917:-.46,1918:-.30,1919:-.28,
+1920:-.27,1921:-.19,1922:-.29,1923:-.27,1924:-.27,1925:-.22,1926:-.11,1927:-.22,1928:-.20,1929:-.36,
+1930:-.16,1931:-.10,1932:-.16,1933:-.29,1934:-.13,1935:-.20,1936:-.15,1937:-.03,1938:-.00,1939:-.02,
+1940:.13,1941:.19,1942:.07,1943:.09,1944:.20,1945:.09,1946:-.07,1947:-.03,1948:-.11,1949:-.11,
+1950:-.17,1951:-.07,1952:.01,1953:.08,1954:-.13,1955:-.14,1956:-.19,1957:.05,1958:.06,1959:.03,
+1960:-.03,1961:.06,1962:.03,1963:.05,1964:-.20,1965:-.11,1966:-.06,1967:-.02,1968:-.08,1969:.05,
+1970:.03,1971:-.08,1972:.01,1973:.16,1974:-.07,1975:-.01,1976:-.10,1977:.18,1978:.07,1979:.16,
+1980:.26,1981:.32,1982:.14,1983:.31,1984:.16,1985:.12,1986:.18,1987:.32,1988:.39,1989:.27,
+1990:.45,1991:.40,1992:.22,1993:.23,1994:.32,1995:.45,1996:.33,1997:.46,1998:.61,1999:.38,
+2000:.39,2001:.54,2002:.63,2003:.62,2004:.53,2005:.68,2006:.64,2007:.66,2008:.54,2009:.65,
+2010:.72,2011:.61,2012:.64,2013:.68,2014:.75,2015:.90,2016:1.01,2017:.92,2018:.85,2019:.98,
+2020:1.01,2021:.85,2022:.89,2023:1.17,2024:1.28,2025:1.19};
+const YEARS = Object.keys(TEMPS).map(Number);
+const AUTHOR = "Henoc Dossou"; // <-- put your name here
+document.getElementById('author').textContent = AUTHOR;
+
+// color scale for stripes: blue -> white -> red
+function heatColor(v){
+  const stops=[[-.5,[8,48,107]],[-.25,[66,146,198]],[0,[198,219,239]],[.25,[252,187,161]],[.6,[239,59,44]],[1.3,[103,0,13]]];
+  if(v<=stops[0][0]) return `rgb(${stops[0][1]})`;
+  for(let i=1;i<stops.length;i++){
+    if(v<=stops[i][0]){const [a,ca]=stops[i-1],[b,cb]=stops[i],t=(v-a)/(b-a);
+      return `rgb(${ca.map((c,k)=>Math.round(c+(cb[k]-c)*t)).join(',')})`;}
+  }
+  return `rgb(${stops.at(-1)[1]})`;
+}
+const stripes=document.getElementById('stripes');
+YEARS.forEach(y=>{const d=document.createElement('div');d.style.background=heatColor(TEMPS[y]);stripes.appendChild(d)});
+
+// ===== Chart =====
+const svg=document.getElementById('chart'), NS='http://www.w3.org/2000/svg';
+const W=640,H=340,m={l:46,r:16,t:16,b:34};
+const x=y=>m.l+(y-1880)/(2025-1880)*(W-m.l-m.r);
+const yS=v=>m.t+(1.4-v)/(1.4+0.6)*(H-m.t-m.b);
+function el(tag,attrs,parent=svg){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e}
+[-0.5,0,0.5,1].forEach(v=>{
+  el('line',{x1:m.l,x2:W-m.r,y1:yS(v),y2:yS(v),stroke:v===0?'#4b5390':'#232a4d','stroke-dasharray':v===0?'':'3 4'});
+  el('text',{x:m.l-8,y:yS(v)+4,'text-anchor':'end',fill:'#8a90b8','font-size':11,'font-family':'JetBrains Mono'}).textContent=(v>0?'+':'')+v.toFixed(1)+'°';
+});
+[1880,1920,1960,2000,2025].forEach(y=>{el('text',{x:x(y),y:H-10,'text-anchor':'middle',fill:'#8a90b8','font-size':11,'font-family':'JetBrains Mono'}).textContent=y});
+const lifeRect=el('rect',{y:m.t,height:H-m.t-m.b,fill:'rgba(255,138,61,.10)'});
+const lifeLbl=el('text',{y:m.t+14,fill:'#ff8a3d','font-size':11,'font-family':'JetBrains Mono'});
+YEARS.forEach(y=>el('circle',{cx:x(y),cy:yS(TEMPS[y]),r:2.4,fill:heatColor(TEMPS[y]),opacity:.9}));
+el('path',{d:YEARS.map((y,i)=>(i?'L':'M')+x(y).toFixed(1)+','+yS(TEMPS[y]).toFixed(1)).join(''),fill:'none',stroke:'#eef0fa','stroke-width':1.4,opacity:.55});
+// 10-year smoothed
+const smooth=YEARS.map(y=>{let s=0,n=0;for(let k=y-5;k<=y+5;k++)if(TEMPS[k]!==undefined){s+=TEMPS[k];n++}return [y,s/n]});
+el('path',{d:smooth.map(([y,v],i)=>(i?'L':'M')+x(y).toFixed(1)+','+yS(v).toFixed(1)).join(''),fill:'none',stroke:'#ff8a3d','stroke-width':3,'stroke-linecap':'round'});
+const cross=el('line',{y1:m.t,y2:H-m.b,stroke:'#ffd166','stroke-width':1,opacity:0});
+const dot=el('circle',{r:5,fill:'#ffd166',opacity:0});
+const readout=document.getElementById('readout');
+function inspect(evt){
+  const r=svg.getBoundingClientRect(),px=(evt.clientX-r.left)/r.width*W;
+  let yr=Math.round(1880+(px-m.l)/(W-m.l-m.r)*145);yr=Math.max(1880,Math.min(2025,yr));
+  cross.setAttribute('x1',x(yr));cross.setAttribute('x2',x(yr));cross.setAttribute('opacity',.8);
+  dot.setAttribute('cx',x(yr));dot.setAttribute('cy',yS(TEMPS[yr]));dot.setAttribute('opacity',1);
+  const v=TEMPS[yr];readout.innerHTML=`<b style="color:#ffd166">${yr}</b> · ${(v>0?'+':'')+v.toFixed(2)}°C vs. 1951–1980 average`;
+}
+svg.addEventListener('pointermove',inspect);svg.addEventListener('pointerdown',inspect);
+
+// birth year
+// NASA: the 10 most recent years (2016–2025) are the 10 warmest on record
+const ranked=[2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+const bornIn=document.getElementById('born');
+function updBorn(){
+  const b=+bornIn.value;document.getElementById('bornYear').textContent=b;
+  document.getElementById('bornHot').textContent=ranked.filter(y=>y>=b).length;
+  const d=TEMPS[2025]-TEMPS[b];document.getElementById('bornDelta').textContent=(d>=0?'+':'')+d.toFixed(2)+'°C';
+  lifeRect.setAttribute('x',x(b));lifeRect.setAttribute('width',x(2025)-x(b));
+  lifeLbl.setAttribute('x',x(b)+5);lifeLbl.textContent='your lifetime';
+}
+bornIn.addEventListener('input',updBorn);updBorn();
+
+// ===== Game =====
+const PLANS=[
+ {id:'game',em:'🏈',name:'Friday night game',tag:'outdoor · evening',s:1.0,
+  fail:['HeatAdvisoryException: kickoff pushed to 9pm','StormError: lightning delay → game postponed'],
+  ok:'Game on. Bleachers packed. Perfect night.'},
+ {id:'concert',em:'🎤',name:'Outdoor concert',tag:'outdoor · all day',s:1.15,
+  fail:['SevereWeatherError: festival evacuated — thunderstorm','HeatException: 3 fans treated for heat exhaustion, set cut short'],
+  ok:'Front row. Voice gone. Worth it.'},
+ {id:'beach',em:'🏖️',name:'Beach day',tag:'outdoor · midday',s:.9,
+  fail:['WaterQualityError: beach closed — algae bloom after heat wave','UVIndexOverflow: index 11, left by noon'],
+  ok:'Sun, sand, nobody got burnt. Somehow.'},
+ {id:'soccer',em:'⚽',name:'Soccer tournament',tag:'outdoor · afternoon',s:1.2,
+  fail:['HeatIndexError: 105°F — tournament canceled','FieldNotFound: pitch flooded overnight'],
+  ok:'Three games, one trophy.'},
+ {id:'job',em:'🛟',name:'Lifeguard shift',tag:'outdoor job · $$',s:.95,
+  fail:['PoolClosedError: lightning — shift canceled, no pay','HeatException: shift cut short, sent home'],
+  ok:'Full shift. Paycheck secured.'},
+ {id:'hike',em:'🥾',name:'Hike with friends',tag:'outdoor · morning',s:.85,
+  fail:['AirQualityError: AQI 160 from wildfire smoke — stay inside','TrailClosed: fire risk too high'],
+  ok:'Summit selfie acquired.'},
+ {id:'thrift',em:'🛍️',name:'Thrift & boba run',tag:'mostly indoors',s:.45,
+  fail:['PowerOutageError: heat wave grid strain — store closed'],
+  ok:'Found a $6 vintage jacket. Iconic.'},
+ {id:'grad',em:'🎓',name:'Grad party in the yard',tag:'outdoor · afternoon',s:1.05,
+  fail:['StormError: tent blew over, party moved into a tiny living room','HeatException: cake melted, guests left early'],
+  ok:'Speeches, cake, a group photo where everyone blinked.'}
+];
+const ERAS=[
+ {y:1995,label:'Summer 1995',sub:'your parents',risk:.10,fits:[0,1]},
+ {y:2025,label:'Summer 2025',sub:'right now',risk:.34,fits:[1,3]},
+ {y:2055,label:'Summer 2055',sub:'your kids?',risk:.55,fits:[3,5]}
+];
+let picked=[],era=null,running=false;
+const plansBox=document.getElementById('plans'),yearsBox=document.getElementById('years'),runBtn=document.getElementById('run'),out=document.getElementById('out');
+PLANS.forEach(p=>{
+  const b=document.createElement('button');b.className='plan';b.setAttribute('aria-pressed','false');
+  b.innerHTML=`<span class="em">${p.em}</span>${p.name}<small>${p.tag}</small>`;
+  b.onclick=()=>{
+    if(running)return;
+    const i=picked.indexOf(p.id);
+    if(i>-1)picked.splice(i,1); else {if(picked.length===3)picked.shift();picked.push(p.id)}
+    [...plansBox.children].forEach((c,k)=>c.setAttribute('aria-pressed',picked.includes(PLANS[k].id)));
+    document.getElementById('pickCount').textContent=`(${picked.length}/3)`;upd();
+  };plansBox.appendChild(b);
+});
+ERAS.forEach((e,i)=>{
+  const b=document.createElement('button');b.className='yr';b.setAttribute('aria-pressed','false');
+  b.innerHTML=`${e.label}<small>${e.sub}</small>`;
+  b.onclick=()=>{if(running)return;era=i;[...yearsBox.children].forEach((c,k)=>c.setAttribute('aria-pressed',k===i));upd()};
+  yearsBox.appendChild(b);
+});
+function upd(){runBtn.disabled=!(picked.length===3&&era!==null)||running}
+const sleep=ms=>new Promise(r=>setTimeout(r,matchMedia('(prefers-reduced-motion: reduce)').matches?0:ms));
+function line(html,cls=''){const s=document.createElement('div');if(cls)s.className=cls;s.innerHTML=html;out.appendChild(s);out.scrollTop=out.scrollHeight}
+async function run(){
+  running=true;upd();out.innerHTML='';document.getElementById('score').style.display='none';
+  const E=ERAS[era];let surv=0;
+  line(`$ npm run weekend -- --year=${E.y}`,'c-dim');await sleep(400);
+  line(`> loading forecast for ${E.label}...`,'c-cool');await sleep(600);
+  for(const id of picked){
+    const p=PLANS.find(q=>q.id===id);
+    line(`> running ${p.em} ${p.name}...`);await sleep(700);
+    if(Math.random()<Math.min(.9,E.risk*p.s)){
+      line(`  ✖ ${p.fail[Math.floor(Math.random()*p.fail.length)]}`,'c-err');
+    }else{surv++;line(`  ✔ ${p.ok}`,'c-ok')}
+    await sleep(350);
+  }
+  const fits=E.fits[0]+Math.floor(Math.random()*(E.fits[1]-E.fits[0]+1));
+  await sleep(300);
+  line(`> wardrobe.js: ${fits} outfit change${fits===1?'':'s'} (hoodie → shorts → rain jacket)`,'c-warn');
+  await sleep(400);
+  const crashed=3-surv;
+  if(crashed===0) line(`\nBuild succeeded. 3/3 plans ran. ${E.y===1995?'Enjoy it — this was normal back then.':'Lucky run. Try it a few more times.'}`,'c-ok');
+  else line(`\nBuild finished with ${crashed} error${crashed>1?'s':''}. ${E.y===2055?'This is the future we can still change →  /patch':'Try the other years and compare. Then go to /patch.'}`,crashed>1?'c-err':'c-warn');
+  document.getElementById('sSurv').textContent=`${surv}/3`;document.getElementById('sCrash').textContent=crashed;document.getElementById('sFit').textContent=fits;
+  document.getElementById('score').style.display='flex';
+  running=false;upd();document.getElementById('again').style.display='inline-block';
+}
+runBtn.onclick=run;document.getElementById('again').onclick=()=>{if(!running)run()};
+
+// ===== Then vs now cells =====
+const cells=document.getElementById('cells');
+for(let i=0;i<100;i++){cells.appendChild(document.createElement('div'))}
+// pseudo-random but fixed positions for the 10 hot squares
+const hotIdx=[7,23,31,46,52,58,64,77,85,93];
+function setEra(e){
+  document.querySelectorAll('.toggle button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.era===e));
+  [...cells.children].forEach((c,i)=>c.classList.toggle('hot',e==='now'&&hotIdx.includes(i)));
+  document.getElementById('cellNum').innerHTML=e==='now'?'~10':'&lt;1';
+  document.getElementById('cellTxt').textContent=e==='now'
+    ?'squares out of 100 have an extremely hot summer in a typical recent year — about 10× more than before.'
+    :'square out of 100 had an extremely hot summer in a typical year (1951–1980).';
+}
+document.querySelectorAll('.toggle button').forEach(b=>b.onclick=()=>setEra(b.dataset.era));
+
+// ===== Patch notes =====
+const ACTS=[
+ {lvl:'5 min',t:'Check if I can pre-register to vote',d:'Many states let 16- and 17-year-olds pre-register so you\'re ready on your 18th birthday. Look up your state\'s rules.',c:'feat: pre-register to vote'},
+ {lvl:'15 min',t:'Email my city council about heat',d:'Ask for more street trees, shaded bus stops, and cooling centers. Local leaders read messages from students.',c:'feat: email city council re: trees + cooling'},
+ {lvl:'15 min',t:'Contact my representatives',d:'Call or email your state and federal reps. Tell them how heat affects your life — personal stories stick.',c:'feat: contact reps about clean energy'},
+ {lvl:'1 meeting',t:'Speak at a school board meeting',d:'Ask about a heat plan: AC in classrooms, water breaks, safer practice times, solar panels on the roof.',c:'feat: school heat plan — public comment'},
+ {lvl:'ongoing',t:'Join or start a climate club',d:'One person is a bug report. A group of people is a pull request that has to be reviewed.',c:'feat: join climate club'},
+ {lvl:'1 post',t:'Post about this on TikTok',d:'Share your plans.exe result and one action. Peers trust peers.',c:'docs: share plans.exe on TikTok'},
+ {lvl:'ongoing',t:'Ask my school or job about energy',d:'Ask if they use clean energy, turn off unused lights and AC, or have recycling and composting. Questions start changes.',c:'refactor: ask school about clean energy'},
+ {lvl:'ongoing',t:'Keep the personal stuff going',d:'Thrift, bike or bus, use less water. Small fixes still count — they just aren\'t the whole patch.',c:'fix: keep thrifting, biking, saving water'}
+];
+const actsBox=document.getElementById('acts'),gitlog=document.getElementById('gitlog'),copyBtn=document.getElementById('copyShare');
+const hash=s=>{let h=0;for(const ch of s)h=(h*31+ch.charCodeAt(0))>>>0;return h.toString(16).padStart(7,'0').slice(0,7)};
+ACTS.forEach((a,i)=>{
+  const l=document.createElement('label');l.className='act';
+  l.innerHTML=`<input type="checkbox" data-i="${i}"><div><span class="lvl">${a.lvl}</span><b>${a.t}</b><span>${a.d}</span></div>`;
+  actsBox.appendChild(l);
+});
+function renderLog(){
+  const sel=[...actsBox.querySelectorAll('input:checked')].map(c=>ACTS[c.dataset.i]);
+  copyBtn.disabled=!sel.length;
+  if(!sel.length){gitlog.innerHTML='<span class="c-dim">nothing committed yet. check an action →</span>';return}
+  gitlog.innerHTML=sel.slice().reverse().map(a=>`<span class="commit-hash">${hash(a.c)}</span> ${a.c}`).join('\n')
+    +`\n\n<span class="c-ok">✔ ${sel.length} commit${sel.length>1?'s':''} ready to push to planet/main</span>`;
+}
+actsBox.addEventListener('change',renderLog);
+copyBtn.onclick=async()=>{
+  const sel=[...actsBox.querySelectorAll('input:checked')].map(c=>ACTS[c.dataset.i]);
+  const txt=`Rising temps keep crashing my plans 🔥 So I'm pushing an update:\n${sel.map(a=>'✅ '+a.t).join('\n')}\nRun plans.exe and see what crashes yours. #climateaction`;
+  try{await navigator.clipboard.writeText(txt);document.getElementById('copyMsg').textContent='copied ✔ paste it in your caption'}
+  catch(e){document.getElementById('copyMsg').textContent='copy blocked — select the log text instead'}
+};
+
+// ===== Quiz =====
+const QS=[
+ {q:'According to NASA, how unusual is the current rate of warming?',o:['Normal for Earth','Not seen in the past 100 years','Not seen in the past 10,000 years'],a:2,f:'NASA says today\'s warming is happening at a rate not seen in the past 10,000 years.'},
+ {q:'"Extremely hot" summers used to cover under 1% of land. About how much do they cover in recent years?',o:['About 2%','About 10%','About 50%'],a:1,f:'NASA research found about 10% — more than ten times as common as in 1951–1980.'},
+ {q:'Which action reaches the most people at once?',o:['Recycling one more bottle','Getting your school to adopt a heat & clean-energy plan','Taking a shorter shower'],a:1,f:'Personal actions matter, but a school or city decision changes things for everyone at once. That\'s civic engagement.'}
+];
+const qb=document.getElementById('quizBox');let qScore=0,qDone=0;
+QS.forEach((Q,i)=>{
+  const d=document.createElement('div');d.className='q card';
+  d.innerHTML=`<b class="mono c-dim">test_${i+1}()</b><div style="margin-top:6px">${Q.q}</div><div class="opts"></div><div class="fb" aria-live="polite"></div>`;
+  const opts=d.querySelector('.opts');
+  Q.o.forEach((o,k)=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>{
+    if(d.dataset.done)return;d.dataset.done=1;qDone++;
+    if(k===Q.a){b.classList.add('right');qScore++;d.querySelector('.fb').innerHTML='<span class="c-ok">✔ PASS</span> — '+Q.f}
+    else{b.classList.add('wrong');opts.children[Q.a].classList.add('right');d.querySelector('.fb').innerHTML='<span class="c-err">✖ FAIL</span> — '+Q.f}
+    if(qDone===QS.length)document.getElementById('quizScore').innerHTML=`${qScore}/${QS.length} tests passing. ${qScore===3?'<span class="c-ok">Ship it. 🚀</span>':'Scroll up, debug, and try again.'}`;
+  };opts.appendChild(b)});
+  qb.appendChild(d);
+});
+</script>
+</body>
+</html>
